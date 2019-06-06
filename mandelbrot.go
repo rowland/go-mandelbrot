@@ -1,6 +1,7 @@
 package mandelbrot
 
 import "math"
+import "image"
 
 // Complex is our custom type to keep parity with other implementations.
 type Complex struct{ x, y float64 }
@@ -78,7 +79,8 @@ func color(v int, limit int) Color {
 	return BLACK
 }
 
-func fillRGBA(
+// DrawPix draws a Mandelbrot set in and returns an RGBA buffer.
+func DrawPix(
 	width int,
 	height int,
 	cx float64,
@@ -102,4 +104,17 @@ func fillRGBA(
 		},
 	)
 	return img
+}
+
+// DrawNRGBA draws a Mandelbrot set in and returns an RGBA buffer.
+func DrawNRGBA(
+	width int, height int,
+	cx float64, cy float64,
+	mag float64, limit int) *image.NRGBA {
+	pix := DrawPix(width, height, cx, cy, mag, limit)
+	return &image.NRGBA{
+		Pix:    pix,
+		Stride: width * 4,
+		Rect:   image.Rect(0, 0, width, height),
+	}
 }

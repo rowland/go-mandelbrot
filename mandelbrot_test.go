@@ -2,7 +2,6 @@ package mandelbrot
 
 import (
 	"bytes"
-	"image"
 	"image/png"
 	"testing"
 
@@ -74,7 +73,7 @@ func TestIterAreaRange(t *testing.T) {
 	assert.Equal(maxY, 2.0)
 }
 
-func TestFillRGBA(t *testing.T) {
+func TestDrawPix(t *testing.T) {
 	assert := assert.New(t)
 	w := 6
 	h := 4
@@ -82,7 +81,7 @@ func TestFillRGBA(t *testing.T) {
 	mag := 1.0
 	limit := 1000
 
-	img := fillRGBA(w, h, c.x, c.y, mag, limit)
+	img := DrawPix(w, h, c.x, c.y, mag, limit)
 	assert.Equal(img[3*4+0], uint8(25))
 	assert.Equal(img[3*4+1], uint8(7))
 	assert.Equal(img[3*4+2], uint8(26))
@@ -95,14 +94,9 @@ func TestEncodePNG(t *testing.T) {
 	c := Complex{x: 0.0, y: 0.0}
 	mag := 1.0
 	limit := 1000
-	img := fillRGBA(w, h, c.x, c.y, mag, limit)
-	pngImg := &image.NRGBA{
-		Pix:    img,
-		Stride: w * 4,
-		Rect:   image.Rect(0, 0, w, h),
-	}
+	img := DrawNRGBA(w, h, c.x, c.y, mag, limit)
 	var buf bytes.Buffer
-	if err := png.Encode(&buf, pngImg); err != nil {
+	if err := png.Encode(&buf, img); err != nil {
 		t.Error(err)
 	}
 }
