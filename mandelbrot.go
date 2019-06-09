@@ -72,7 +72,7 @@ var PALETTE = [16]Color{
 // BLACK is used to represent the "lake."
 var BLACK = Color{0, 0, 0, 255}
 
-func color(v int, limit int) Color {
+func pixelColor(v int, limit int) Color {
 	if v > 0 && v < limit {
 		return PALETTE[v%16]
 	}
@@ -96,7 +96,7 @@ func DrawPix(
 		mag,
 		func(i, x, y int, p Complex) {
 			v := iterations(p, limit)
-			pixel := color(v, limit)
+			pixel := pixelColor(v, limit)
 			offset := (i * 4)
 			for b := 0; b < 4; b++ {
 				img[offset+b] = pixel[b]
