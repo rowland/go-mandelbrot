@@ -1,7 +1,10 @@
 package mandelbrot
 
-import "math"
-import "image"
+import (
+	"image"
+	"image/color"
+	"math"
+)
 
 // Complex is our custom type to keep parity with other implementations.
 type Complex struct{ x, y float64 }
@@ -50,7 +53,7 @@ func iterArea(
 type Color [4]uint8
 
 // PALETTE is a set of colors stolen from another Mandelbrot set.
-var PALETTE = [16]Color{
+var PALETTE = []color.RGBA{
 	{66, 30, 15, 255},
 	{25, 7, 26, 255},
 	{9, 1, 47, 255},
@@ -70,9 +73,9 @@ var PALETTE = [16]Color{
 }
 
 // BLACK is used to represent the "lake."
-var BLACK = Color{0, 0, 0, 255}
+var BLACK = color.RGBA{0, 0, 0, 255}
 
-func pixelColor(v int, limit int) Color {
+func pixelColor(v int, limit int) color.RGBA {
 	if v > 0 && v < limit {
 		return PALETTE[v%16]
 	}
@@ -98,9 +101,10 @@ func DrawPix(
 			v := iterations(p, limit)
 			pixel := pixelColor(v, limit)
 			offset := (i * 4)
-			for b := 0; b < 4; b++ {
-				img[offset+b] = pixel[b]
-			}
+			img[offset+0] = pixel.R
+			img[offset+1] = pixel.G
+			img[offset+2] = pixel.B
+			img[offset+3] = pixel.A
 		},
 	)
 	return img

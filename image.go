@@ -15,6 +15,8 @@ type Image struct {
 	CenterY float64
 	Mag     float64
 	Limit   int
+	// Palette defaults to UltraFractalPalette.
+	Palette color.Palette
 }
 
 // ColorModel returns the Image's color model.
@@ -43,6 +45,37 @@ func (p *Image) At(x, y int) color.Color {
 		y: y0 - float64(y)*px,
 	}
 	v := iterations(c, p.Limit)
-	pc := pixelColor(v, p.Limit)
-	return color.RGBA{pc[0], pc[1], pc[2], pc[3]}
+	pc := p.colorForIterations(v, p.Limit)
+	return pc
+}
+
+// UltraFractalPalette is a palette of colors allegedly from Ultra Fractal program.
+var UltraFractalPalette = []color.Color{
+	color.RGBA{0, 0, 0, 255},
+	color.RGBA{66, 30, 15, 255},
+	color.RGBA{25, 7, 26, 255},
+	color.RGBA{9, 1, 47, 255},
+	color.RGBA{4, 4, 73, 255},
+	color.RGBA{0, 7, 100, 255},
+	color.RGBA{12, 44, 138, 255},
+	color.RGBA{24, 82, 177, 255},
+	color.RGBA{57, 125, 209, 255},
+	color.RGBA{134, 181, 229, 255},
+	color.RGBA{211, 236, 248, 255},
+	color.RGBA{241, 233, 191, 255},
+	color.RGBA{248, 201, 95, 255},
+	color.RGBA{255, 170, 0, 255},
+	color.RGBA{204, 128, 0, 255},
+	color.RGBA{153, 87, 0, 255},
+	color.RGBA{106, 52, 3, 255},
+}
+
+func (p *Image) colorForIterations(iterations, limit int) color.Color {
+	if p.Palette == nil {
+		p.Palette = UltraFractalPalette
+	}
+	if iterations > 0 && iterations < limit {
+		return p.Palette[iterations%(len(p.Palette)-1)+1]
+	}
+	return p.Palette[0]
 }
