@@ -2,6 +2,7 @@ package mandelbrot
 
 import (
 	"bytes"
+	"image/color"
 	"image/png"
 	"testing"
 
@@ -18,11 +19,11 @@ func TestIterations(t *testing.T) {
 	assert.Equal(iterations(p3, 10), 10)
 }
 
-func TestColor(t *testing.T) {
+func TestPixelColor(t *testing.T) {
 	assert := assert.New(t)
-	assert.Equal(color(0, 10), Color{0, 0, 0, 255})
-	assert.Equal(color(10, 10), Color{0, 0, 0, 255})
-	assert.Equal(color(4, 10), Color{0, 7, 100, 255})
+	assert.Equal(pixelColor(0, 10), color.RGBA{0, 0, 0, 255})
+	assert.Equal(pixelColor(10, 10), color.RGBA{0, 0, 0, 255})
+	assert.Equal(pixelColor(4, 10), color.RGBA{0, 7, 100, 255})
 }
 
 func TestIterAreaCount(t *testing.T) {
